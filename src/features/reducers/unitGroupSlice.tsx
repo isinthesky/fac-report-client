@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Unit, updateCurrentGroupType } from "../../static/types";
+import { Unit, updateCurrentGroupType, updateCurrenUnitDevice } from "../../static/types";
 
 
 export interface UnitGroupState {
@@ -40,6 +40,13 @@ export const unitGroupSlice = createSlice({
         state.groups.push(group)
       }
     },
+    updateFromCurrent: (state, action: PayloadAction<{ index: number }>) => {
+      const { index} = action.payload;
+      console.log(index, state.currentGroup)
+      if (state.groups[index]) {
+        state.groups[index] = state.currentGroup;
+      }
+    },
     deleteGroup: (state, action: PayloadAction<number>) => {
       state.groups.splice(action.payload, 1);
     },
@@ -48,6 +55,10 @@ export const unitGroupSlice = createSlice({
     },
     updateCurrentGroup: (state, action: PayloadAction<Unit>) => {
       state.currentGroup = action.payload;
+    },
+    updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
+
+      state.currentGroup.dvList[action.payload.devicePosition] = action.payload.deviceId;
     },
     setSelectedGroup: (state, action: PayloadAction<number>) => {
       state.selectedPos = action.payload
@@ -63,5 +74,5 @@ export const unitGroupSlice = createSlice({
   },
 });
 
-export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit } = unitGroupSlice.actions;
+export const {addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit, updateCurrentUnitDevice } = unitGroupSlice.actions;
 export default unitGroupSlice.reducer;

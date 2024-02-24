@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { addGroup, updateGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
+import { addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BaseInput, CenterLabel, ControlButton, MiniButton } from '../../../static/componentSet';
@@ -70,10 +70,8 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   };
 
   const handleUpdate = (index: number) => {
-    const { name, ...otherProps } = unitGroupSlice.currentGroup;
-    const updatedGroup = { name:editedNames[index] , ...otherProps };
-
-    dispatch(updateGroup({ index, group: updatedGroup }));
+    console.log(index)
+    dispatch(updateFromCurrent({ index }));
   };
 
   const handleDelete = (index: number) => {
@@ -82,8 +80,8 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
 
   const handleApply = (index: number) => {
     if (viewMode) {
-      const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]};
-      currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList;
+      const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
+      currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
     }
@@ -234,6 +232,8 @@ const GroupName = styled.input<{ mode: string, heightsize?: string, fontsize?: s
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
   
   background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
+  
+  pointer-events: none; 
 `;
 
 
